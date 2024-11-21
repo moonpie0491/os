@@ -1,0 +1,1636 @@
+Assignment 1
+Execution of basic and advanced Unix commands
+
+1. Change your password to a password you would like to use for the remainder of the semester.
+passwd
+
+ 2. Display the system’s date. 
+date
+
+3. Count the number of lines in the /etc/passwd file. 
+Wc -l /etc/passwd
+
+4. Find out who else is on the system. 
+who
+
+5. Direct the output of the man pages for the date command to a file named mydate.
+Man date > mydate
+
+ 6. Create a subdirectory called mydir. 
+Mkdir mydir
+
+7. Move the file mydate into the new subdirectory. 
+Mv mydate mydir/
+
+8. Go to the subdirectory mydir and copy the file mydate to a new file called ourdate 
+Cd mydir ; cp mydate ourdate
+
+
+9. List the contents of mydir. 
+ls
+
+10. Do a long listing on the file ourdate and note the permissions. 
+Ls -l
+
+11. Display the name of the current directory starting from the root. 
+pwd
+
+12. Move the files in the directory mydir back to the HOME directory. 
+mv 
+
+13. List all the files in your HOME directory.  
+ls
+
+14. Display the first 5 lines of mydate. 
+Head -n ~/mydate
+
+
+15. Display the last 8 lines of mydate. 
+Tail -n 8 ~/mydate
+
+16. Remove the directory mydir. 
+Rmdir mydir
+
+
+17. Redirect the output of the long listing of files to a file named list. 
+Ls -l > list
+
+18. Select any 5 capitals of states in India and enter them in a file named capitals
+echo -e “New delhi\nMumbai\nChennai\nKolkata\nBengaluru” > capitals
+
+1.Choose 5 more capitals and enter them in a file named capitals1
+echo -e “New delhi\nMumbai\nChennai\nKolkata\nBengaluru” > capitals1
+
+2. Choose 5 more capitals and enter them in a file named capitals2
+echo -e “New delhi\nMumbai\nChennai\nKolkata\nBengaluru” > capitals2
+
+3. Concatenate all 3 files and redirect the output to a file named capitals3
+cat capitals capitals1 capitals2 > capitals3 
+
+19. Concatenate the file capitals2 at the end of file capitals.
+Cat capitals2 >> capitals
+
+20. Redirect the file capitals as an input to the command “wc –l”. 
+wc -l <capitals
+
+21. Give read and write permissions to all users for the file capitals. 
+chmod a+rw capitals
+
+
+22. Give read permissions only to the owner of the file capitals. Open the file, make some changes and try to save it. What happens ? 
+
+23. Create an alias to concatenate the 3 files capitals1, capitals2, capitals3 and redirect the output to a file named capitals. Activate the alias and make it run. 
+ alias concatcaps =’cat capitals1 capitals2 capitals3 > capitals4’
+ concatcaps
+24. What are the environment variables PATH, HOME and TERM set to on your terminal ? 
+ echo $PATH 
+echo $HOME
+echo $TERM
+
+25. Find out the number of times the string “the” appears in the file mydate.
+Grep -o “the ” mydate | wc -l
+
+ 26. Find out the line numbers on which the string “date” exists in mydate. 
+Grep -n “date” mydate
+
+27. Print all lines of mydate except those that have the letter “i” in them. 
+Grep -v “i” mydate
+
+28. Create the file monotonic as follows: ^a?b?b?c?…………..x?y?z$ Run the egrep command for monotonic against /usr/dict/words and search for all 4 letter words. 
+echo “^a?b?b?c?…………..x?y?z$” > monotonic
+ egrep '^....$' /usr/share/dict/words
+
+29. List 5 states in north east India in a file mystates. List their corresponding capitals in a file mycapitals. Use the paste command to join the 2 files. 
+
+
+30. Use the cut command to print the 1st and 3rd columns of the /etc/passwd file for all students in this class. 
+Cut -d: -f1,3 /etc/passwd
+
+31. Count the number of people logged in and also trap the users in a file using the tee command.
+who | tee users_logged_in | wc -l
+
+Assignment 2
+Implement Following shell programs
+Perform arithmetic operations
+#!/bin/bash
+
+# Function to perform addition
+add() {
+  echo "Addition: $(( $1 + $2 ))"
+}
+
+# Function to perform subtraction
+subtract() {
+  echo "Subtraction: $(( $1 - $2 ))"
+}
+
+# Function to perform multiplication
+multiply() {
+  echo "Multiplication: $(( $1  $2 ))"
+}
+
+# Function to perform division
+divide() {
+  if [ $2 -eq 0 ]; then
+    echo "Division by zero is not allowed."
+  else
+    echo "Division: $(( $1 / $2 ))"
+  fi
+}
+
+# Main script execution
+echo "Enter the first number:"
+read num1
+
+echo "Enter the second number:"
+read num2
+
+echo "Choose the operation:"
+echo "1. Addition"
+echo "2. Subtraction"
+echo "3. Multiplication"
+echo "4. Division"
+
+read operation
+
+case $operation in
+  1) add $num1 $num2 ;;
+  2) subtract $num1 $num2 ;;
+  3) multiply $num1 $num2 ;;
+  4) divide $num1 $num2 ;;
+  ) echo "Invalid operation selected." ;;
+esac
+commands:
+cd /directory/ 
+chmod +x filename.sh
+./filename.sh
+
+Sorting an integer array
+#!/bin/bash
+
+# Function for Insertion Sort
+insertion_sort() {
+    arr=("$@")
+    for ((i=1; i<${#arr[@]}; i++)); do
+        key=${arr[i]}
+        j=$((i-1))
+        while ((j >= 0 && arr[j] > key)); do
+            arr[j+1]=${arr[j]}
+            j=$((j-1))
+        done
+        arr[j+1]=$key
+    done
+    echo "Sorted array using Insertion Sort: ${arr[@]}"
+}
+
+# Function for Selection Sort
+selection_sort() {
+    arr=("$@")
+    for ((i=0; i<${#arr[@]}-1; i++)); do
+        min_index=$i
+        for ((j=i+1; j<${#arr[@]}; j++)); do
+            if ((arr[j] < arr[min_index])); then
+                min_index=$j
+            fi
+        done
+        temp=${arr[i]}
+        arr[i]=${arr[min_index]}
+        arr[min_index]=$temp
+    done
+    echo "Sorted array using Selection Sort: ${arr[@]}"
+}
+
+# Function for Bubble Sort
+bubble_sort() {
+    arr=("$@")
+    for ((i=0; i<${#arr[@]}-1; i++)); do
+        for ((j=0; j<${#arr[@]}-i-1; j++)); do
+            if ((arr[j] > arr[j+1])); then
+                temp=${arr[j]}
+                arr[j]=${arr[j+1]}
+                arr[j+1]=$temp
+            fi
+        done
+    done
+    echo "Sorted array using Bubble Sort: ${arr[@]}"
+}
+
+#!/bin/bash
+
+# Function for Insertion Sort
+insertion_sort() {
+    arr=("$@")
+    for ((i=1; i<${#arr[@]}; i++)); do
+        key=${arr[i]}
+        j=$((i-1))
+        while ((j >= 0 && arr[j] > key)); do
+            arr[j+1]=${arr[j]}
+            j=$((j-1))
+        done
+        arr[j+1]=$key
+    done
+    echo "Sorted array using Insertion Sort: ${arr[@]}"
+}
+
+# Function for Selection Sort
+selection_sort() {
+    arr=("$@")
+    for ((i=0; i<${#arr[@]}-1; i++)); do
+        min_index=$i
+        for ((j=i+1; j<${#arr[@]}; j++)); do
+            if ((arr[j] < arr[min_index])); then
+                min_index=$j
+            fi
+        done
+        temp=${arr[i]}
+        arr[i]=${arr[min_index]}
+        arr[min_index]=$temp
+    done
+    echo "Sorted array using Selection Sort: ${arr[@]}"
+}
+
+# Function for Bubble Sort
+bubble_sort() {
+    arr=("$@")
+    for ((i=0; i<${#arr[@]}-1; i++)); do
+        for ((j=0; j<${#arr[@]}-i-1; j++)); do
+            if ((arr[j] > arr[j+1])); then
+                temp=${arr[j]}
+                arr[j]=${arr[j+1]}
+                arr[j+1]=$temp
+            fi
+        done
+    done
+    echo "Sorted array using Bubble Sort: ${arr[@]}"
+}
+# Main script logic
+echo "Enter the numbers to sort (space-separated):"
+read -a numbers
+
+echo "Choose sorting algorithm:"
+echo "1. Insertion Sort"
+echo "2. Selection Sort"
+echo "3. Bubble Sort"
+read choice
+
+case $choice in
+    1)
+        insertion_sort "${numbers[@]}"
+        ;;
+    2)
+        selection_sort "${numbers[@]}"
+        ;;
+    3)
+        bubble_sort "${numbers[@]}"
+        ;;
+    )
+        echo "Invalid choice"
+        ;;
+esac
+commands:
+cd /directory/ 
+chmod +x filename.sh
+./filename.sh
+
+
+String Conversion
+#!/bin/bash
+
+# Function to convert a string to uppercase
+to_uppercase() {
+    local input=$1
+    echo "$input" | tr '[:lower:]' '[:upper:]'
+}
+
+# Function to convert a string to lowercase
+to_lowercase() {
+    local input=$1
+    echo "$input" | tr '[:upper:]' '[:lower:]'
+}
+
+# Main program
+echo "Enter a string:"
+read user_input
+
+# Convert and display uppercase
+uppercase_result=$(to_uppercase "$user_input")
+echo "Uppercase: $uppercase_result"
+
+# Convert and display lowercase
+lowercase_result=$(to_lowercase "$user_input")
+echo "Lowercase: $lowercase_result"
+
+commands:
+cd /directory/ 
+chmod +x filename.sh
+./filename.sh
+
+String palindrome
+
+#!/bin/bash
+# Prompt the user to enter a string or number
+echo "Enter a string or number:"
+read input
+# Convert the input to a string (in case of number input)
+str=$(echo "$input" | tr -d '[:space:]')  # Remove any spaces
+# Initialize an empty string to hold the reversed string
+reversed=""
+# Get the length of the string
+length=${#str}
+# Reverse the string manually by appending characters in reverse order
+for ((i = length - 1; i >= 0; i--)); do
+    reversed="$reversed${str:i:1}"
+done
+# Compare the original string with the reversed string
+if [ "$reversed" = "$str" ]; then
+    echo "The given input is a palindrome."
+else`
+    echo "The given input is not a palindrome."
+fi
+
+commands:
+cd /directory/ 
+chmod +x filename.sh
+./filename.sh
+
+String length and  to check substring
+GNU nano 7.2                                                                                                     substring.sh                                                                                                               
+#!/bin/bash
+
+# Function to find a substring within a string
+find_substring() {
+    local string="$1"
+    local substring="$2"
+
+    # Use bash's built-in string manipulation to find substring position
+    position=$(expr index "$string" "$substring")
+
+    if [ $position -gt 0 ]; then
+        echo "The substring '$substring' is found in the string."
+        echo "The position of the substring is: $position"
+    else
+        echo "The substring '$substring' is not found in the string."
+    fi
+}
+
+# Main program
+echo "Enter the main string:"
+read -r main_string
+
+echo "Enter the substring to search for:"
+read -r search_substring
+
+# Find and display the substring position
+find_substring "$main_string" "$search_substring"
+
+commands:
+cd /directory/ 
+chmod +x filename.sh
+./filename.sh
+
+Assignment 3
+Generate employee and student report using Awk programming
+The provided AWK programs showcase how to use the language for text processing, data analysis, and report generation.
+Salary.awk
+BEGIN{
+    FS=":"
+    print "Report:\nEmpNo\tEmpName\tBasic\tDA\tHRA\tGross\n=============================================="
+}
+NR>1 && NR<6{
+    da=0.5$3
+    hra=0.3$3
+    g=$3+da+hra
+    print $1"\t"$2"\t"$3"\t"da"\t"hra"\t"g
+}
+END{
+    print "=============================================="
+}
+
+
+Salary.txt:
+EmpNo:EmpName:Basic
+101:John:50000
+102:Jane:60000
+103:Alice:55000
+104:Bob:70000
+commands:
+awk -f salary.awk salary.txt
+
+Student.awk
+!/bin/awk
+
+ Begin
+BEGIN { 
+print " Student report"
+    FS=" "
+}
+
+ Dev
+{
+    name[NR]         = $2
+  average[NR] = ($2 + $3 + $4) / 3
+
+    total += average[NR]
+}
+
+ End
+END {
+    print "Average of" FNR " students, is:\n"
+    i = 1  
+    while (i <= FNR) {
+    printf("%-10s %.2f\n", name[i] , average[i++])
+  }
+    print "\nTotal average = ", total/FNR
+}
+Student.txt
+id:name:m1:m2:m3
+1:a:50:70:30
+2:b:60:90:86
+3:c:63:50:77
+
+commands:
+awk -f student.awk student.txt
+
+
+Assignment 4
+	Solve the Readers-Writers problem 
+a. using threads and semaphores
+import threading
+import time
+
+# Initialize semaphores and locks
+write_semaphore = threading.Semaphore(1)
+read_count_lock = threading.Lock()
+
+# Shared data and counters
+shared_data = ""
+read_count = 0
+
+# Number of iterations for reading and writing
+NUM_ITERATIONS = 3
+
+
+def writer(writer_id):
+    global shared_data
+    for i in range(NUM_ITERATIONS):
+        # Acquire semaphore to ensure exclusive writing
+        write_semaphore.acquire()
+        print(f"Writer {writer_id} is writing...")
+
+        # Write to the shared data
+        shared_data = f"Data written by Writer {writer_id} at iteration {i + 1}"
+        time.sleep(1)
+
+        # Writer finished
+        print(f"Writer {writer_id} has finished writing: {shared_data}")
+
+        # Release semaphore after writing
+        write_semaphore.release()
+        time.sleep(3)  # Simulate time between writes
+
+    print(f"Writer {writer_id} has finished all writing tasks.")
+
+
+def reader(reader_id):
+    global read_count
+    for i in range(NUM_ITERATIONS):
+        # Acquire lock to update read_count safely
+        read_count_lock.acquire()
+        read_count += 1
+        if read_count == 1:
+            # First reader locks the writer semaphore
+            write_semaphore.acquire()
+        read_count_lock.release()
+
+        # Reading the shared data
+        print(f"Reader {reader_id} is reading: {shared_data}")
+        time.sleep(1)
+
+        # Decrease read_count and potentially allow writers if no readers left
+        read_count_lock.acquire()
+        read_count -= 1
+        if read_count == 0:
+            write_semaphore.release()
+        read_count_lock.release()
+
+        time.sleep(2)  # Simulate time between reads
+
+    print(f"Reader {reader_id} has finished all reading tasks.")
+
+
+# Create writer and reader threads
+writer_thread1 = threading.Thread(target=writer, args=(1,))
+writer_thread2 = threading.Thread(target=writer, args=(2,))
+reader_thread1 = threading.Thread(target=reader, args=(1,))
+reader_thread2 = threading.Thread(target=reader, args=(2,))
+
+# Start the threads
+writer_thread1.start()
+writer_thread2.start()
+reader_thread1.start()
+reader_thread2.start()
+
+# Wait for all threads to complete
+writer_thread1.join()
+writer_thread2.join()
+reader_thread1.join()
+reader_thread2.join()
+
+print("All writers and readers have finished their tasks.")
+
+ 
+ b. using threads and mutex
+import threading
+import time
+
+# Initialize lock for mutual exclusion and semaphore for readers
+mutex = threading.Lock()
+write_semaphore = threading.Semaphore(1)
+
+# Shared data and reader counter
+shared_data = ""
+read_count = 0
+read_count_lock = threading.Lock()
+
+def writer(writer_id):
+    global shared_data
+    for i in range(2):
+        # Writer acquires write semaphore for exclusive access
+        write_semaphore.acquire()
+        print(f"Writer {writer_id} is writing...")
+        shared_data = f"Data written by Writer {writer_id} at iteration {i + 1}"
+        time.sleep(1)
+        print(f"Writer {writer_id} has finished writing.")
+        write_semaphore.release()
+        time.sleep(2)
+
+def reader(reader_id):
+    global read_count
+    for i in range(2):
+        # Reader incrementing read_count safely
+        read_count_lock.acquire()
+        read_count += 1
+        if read_count == 1:
+            # First reader locks the writer semaphore
+            write_semaphore.acquire()
+        read_count_lock.release()
+
+        # Reader accesses the shared data
+        print(f"Reader {reader_id} is reading: {shared_data}")
+        time.sleep(1)
+        print(f"Reader {reader_id} has finished reading.")
+
+        # Reader decrementing read_count safely
+        read_count_lock.acquire()
+        read_count -= 1
+        if read_count == 0:
+            # Last reader releases the writer semaphore
+            write_semaphore.release()
+        read_count_lock.release()
+        time.sleep(2)
+
+# Create and start threads for one writer and two readers
+writer_thread = threading.Thread(target=writer, args=(1,))
+reader_thread1 = threading.Thread(target=reader, args=(1,))
+reader_thread2 = threading.Thread(target=reader, args=(2,))
+
+writer_thread.start()
+reader_thread1.start()
+reader_thread2.start()
+
+# Wait for all threads to complete
+writer_thread.join()
+reader_thread1.join()
+reader_thread2.join()
+
+print("All writers and readers have finished their tasks.")
+
+Assignment 5
+
+Solve the Producers-Consumers problem 
+a.	using threads and semaphores
+import threading
+import time
+import random
+
+# Initialize buffer, semaphores, and locks
+BUFFER_SIZE = 5
+buffer = []
+
+empty = threading.Semaphore(BUFFER_SIZE)  # Initially, buffer has all empty slots
+full = threading.Semaphore(0)  # Initially, buffer is empty
+buffer_lock = threading.Lock()
+
+# Number of iterations for producing and consuming
+NUM_ITERATIONS = 10
+
+
+def producer(producer_id):
+    for i in range(NUM_ITERATIONS):
+        # Produce an item (simulated by a random number)
+        item = random.randint(1, 100)
+
+        # Wait if buffer is full (empty semaphores)
+        empty.acquire()
+
+        # Lock the buffer and add the produced item
+        buffer_lock.acquire()
+        buffer.append(item)
+        print(f"Producer {producer_id} produced item {item}. Buffer: {buffer}")
+        buffer_lock.release()
+
+        # Signal that buffer has a new item (full semaphores)
+        full.release()
+
+        time.sleep(random.uniform(0.5, 2))  # Simulate variable time between productions
+
+
+    print(f"Producer {producer_id} has finished producing.")
+
+
+def consumer(consumer_id):
+    for i in range(NUM_ITERATIONS):
+        # Wait if buffer is empty (full semaphores)
+        full.acquire()
+
+        # Lock the buffer and remove the consumed item
+        buffer_lock.acquire()
+        item = buffer.pop(0)
+        print(f"Consumer {consumer_id} consumed item {item}. Buffer: {buffer}")
+        buffer_lock.release()
+
+        # Signal that buffer has an empty slot (empty semaphores)
+        empty.release()
+
+        time.sleep(random.uniform(0.5, 2))  # Simulate variable time between consumptions
+
+    print(f"Consumer {consumer_id} has finished consuming.")
+
+
+# Create producer and consumer threads
+producer_thread1 = threading.Thread(target=producer, args=(1,))
+producer_thread2 = threading.Thread(target=producer, args=(2,))
+consumer_thread1 = threading.Thread(target=consumer, args=(1,))
+consumer_thread2 = threading.Thread(target=consumer, args=(2,))
+
+# Start the threads
+producer_thread1.start()
+producer_thread2.start()
+consumer_thread1.start()
+consumer_thread2.start()
+
+# Wait for all threads to complete
+producer_thread1.join()
+producer_thread2.join()
+consumer_thread1.join()
+consumer_thread2.join()
+
+print("All producers and consumers have finished their tasks.")
+
+
+b.	using threads and mutex
+import threading
+import time
+import random
+
+# Initialize buffer, mutex, and semaphores
+BUFFER_SIZE = 5
+buffer = []
+
+# Semaphores to keep track of the number of empty and full slots
+empty = threading.Semaphore(BUFFER_SIZE)  # Starts with the number of empty slots
+full = threading.Semaphore(0)  # Starts with zero full slots
+
+# Mutex for mutual exclusion when accessing the buffer
+buffer_mutex = threading.Lock()
+
+# Number of iterations for producing and consuming
+NUM_ITERATIONS = 10
+
+
+def producer(producer_id):
+    for i in range(NUM_ITERATIONS):
+        # Produce an item (simulated by a random number)
+        item = random.randint(1, 100)
+
+        # Wait if buffer is full (empty semaphore)
+        empty.acquire()
+
+        # Acquire mutex before modifying the shared buffer
+        buffer_mutex.acquire()
+        buffer.append(item)
+        print(f"Producer {producer_id} produced item {item}. Buffer: {buffer}")
+        buffer_mutex.release()
+
+        # Signal that buffer has a new item (release full semaphore)
+        full.release()
+
+        time.sleep(random.uniform(0.5, 2))  # Simulate time taken to produce
+
+    print(f"Producer {producer_id} has finished producing.")
+
+
+def consumer(consumer_id):
+    for i in range(NUM_ITERATIONS):
+        # Wait if buffer is empty (full semaphore)
+        full.acquire()
+
+        # Acquire mutex before modifying the shared buffer
+        buffer_mutex.acquire()
+        item = buffer.pop(0)
+        print(f"Consumer {consumer_id} consumed item {item}. Buffer: {buffer}")
+        buffer_mutex.release()
+
+        # Signal that there is an empty slot in the buffer (release empty semaphore)
+        empty.release()
+
+        time.sleep(random.uniform(0.5, 2))  # Simulate time taken to consume
+
+    print(f"Consumer {consumer_id} has finished consuming.")
+
+
+# Create producer and consumer threads
+producer_thread1 = threading.Thread(target=producer, args=(1,))
+producer_thread2 = threading.Thread(target=producer, args=(2,))
+consumer_thread1 = threading.Thread(target=consumer, args=(1,))
+consumer_thread2 = threading.Thread(target=consumer, args=(2,))
+
+# Start the threads
+producer_thread1.start()
+producer_thread2.start()
+consumer_thread1.start()
+consumer_thread2.start()
+
+# Wait for all threads to complete
+producer_thread1.join()
+producer_thread2.join()
+consumer_thread1.join()
+consumer_thread2.join()
+
+print("All producers and consumers have finished their tasks.")
+
+Assignment 6
+
+Simulate the following CPU scheduling algorithms:
+a. First come First serve   
+import matplotlib.pyplot as plt
+
+
+# Process class
+class Process:
+    def __init__(self, pid, arrival_time, burst_time):
+        self.pid = pid
+        self.arrival_time = arrival_time
+        self.burst_time = burst_time
+        self.completion_time = 0
+        self.turnaround_time = 0
+        self.waiting_time = 0
+
+
+# FCFS Scheduling
+def fcfs_scheduling(processes):
+    time = 0
+    processes.sort(key=lambda x: x.arrival_time)  # Sort processes based on arrival time
+    gantt_chart = []
+
+    for p in processes:
+        if time < p.arrival_time:
+            time = p.arrival_time
+        gantt_chart.append((p.pid, time, time + p.burst_time))  # Store process execution details in Gantt chart
+        time += p.burst_time
+        p.completion_time = time
+        p.turnaround_time = p.completion_time - p.arrival_time
+        p.waiting_time = p.turnaround_time - p.burst_time
+
+    return gantt_chart
+
+
+# Display Results with properly aligned columns
+def display_results(processes):
+    print("{:<12}{:<15}{:<15}{:<15}{:<20}{:<15}".format(
+        "PID", "Arrival Time", "Burst Time", "Completion Time", "Turnaround Time", "Waiting Time"))
+
+    total_wt = 0
+    total_tat = 0
+    for p in processes:
+        total_wt += p.waiting_time
+        total_tat += p.turnaround_time
+        print("{:<12}{:<15}{:<15}{:<15}{:<20}{:<15}".format(
+            p.pid, p.arrival_time, p.burst_time, p.completion_time, p.turnaround_time, p.waiting_time))
+
+    print("\nAverage waiting time = {:.5f}".format(total_wt / len(processes)))
+    print("Average turnaround time = {:.5f}".format(total_tat / len(processes)))
+
+
+# Display Gantt Chart
+def display_gantt_chart(gantt_chart, title):
+    fig, ax = plt.subplots(figsize=(10, 2))
+    for pid, start, end in gantt_chart:
+        ax.barh(0, end - start, left=start, edgecolor='black', align='center')
+        ax.text((start + end) / 2, 0, f'P{pid}', va='center', ha='center', color='white')
+    ax.set_title(title)
+    ax.set_xlabel("Time")
+    ax.set_yticks([])  # Remove y-axis ticks
+    plt.show()
+
+
+# Driver code
+if __name__ == "__main__":
+    # Take user input for processes
+    num_processes = int(input("Enter the number of processes: "))
+    process_list = []
+
+    for i in range(num_processes):
+        print(f"\nProcess {i + 1}:")
+        pid = int(input("Enter Process ID: "))
+        arrival_time = int(input("Enter Arrival Time: "))
+        burst_time = int(input("Enter Burst Time: "))
+        process_list.append(Process(pid, arrival_time, burst_time))
+
+    # Apply FCFS Scheduling
+    gantt_chart_fcfs = fcfs_scheduling(process_list)
+
+    # Display Results in formatted table
+    display_results(process_list)
+
+    # Display Gantt Chart
+    display_gantt_chart(gantt_chart_fcfs, "First Come First Serve")
+
+ 
+  b. Shortest Job First (Non-preemptive)  
+import matplotlib.pyplot as plt
+
+# Process class
+class Process:
+    def __init__(self, pid, bt, at, prio=None):
+        self.pid = pid  # Process ID
+        self.bt = bt  # Burst time
+        self.at = at  # Arrival time
+        self.prio = prio  # Priority (optional, not used in SJF)
+        self.wt = 0  # Waiting time
+        self.tat = 0  # Turnaround time
+        self.ft = 0  # Finish time
+        self.rt = bt  # Remaining time (for preemptive scheduling)
+
+# Shortest Job First (Non-Preemptive)
+def SJF_Non_Preemptive(processes):
+    processes.sort(key=lambda x: x.at)
+    current_time = 0
+    gantt_chart = []
+    ready_queue = []
+    completed_processes = []
+    while len(completed_processes) < len(processes):
+        for p in processes:
+            if p.at <= current_time and p not in ready_queue and p not in completed_processes:
+                ready_queue.append(p)
+        if ready_queue:
+            ready_queue.sort(key=lambda x: x.bt)
+            p = ready_queue.pop(0)
+            gantt_chart.append((p.pid, current_time, current_time + p.bt))
+            current_time += p.bt
+            p.ft = current_time
+            p.tat = p.ft - p.at
+            p.wt = p.tat - p.bt
+            completed_processes.append(p)
+        else:
+            current_time += 1
+    return gantt_chart
+
+# Function to print the Gantt Chart (text-based)
+def print_gantt_chart(gantt_chart):
+    print("Gantt Chart:")
+    for entry in gantt_chart:
+        print(f"| P{entry[0]} ", end="")
+    print("|")
+    for entry in gantt_chart:
+        print(f"{entry[1]:<5}", end="")
+    print(gantt_chart[-1][2])
+
+# Function to plot the Gantt Chart using Matplotlib
+def plot_gantt_chart(gantt_chart):
+    fig, gnt = plt.subplots()
+    gnt.set_ylim(0, 50)
+    gnt.set_xlim(0, max([end for _, _, end in gantt_chart]))
+    gnt.set_xlabel('Time')
+    gnt.set_ylabel('Processes')
+    yticks = [15 * i + 10 for i in range(len(gantt_chart))]
+    gnt.set_yticks(yticks)
+    gnt.set_yticklabels([f'P{entry[0]}' for entry in gantt_chart])
+    for i, (pid, start_time, end_time) in enumerate(gantt_chart):
+        gnt.broken_barh([(start_time, end_time - start_time)], (yticks[i] - 5, 10), facecolors=('tab:blue'))
+    plt.show()
+
+# Function to print the results with proper column alignment
+def display_sjf_np_results(jobs, gantt_chart):
+    print("\nShortest Job First (Non-Preemptive):")
+    print(f"{'Pid':<6}{'BT':<6}{'AT':<6}{'FT':<6}{'TAT':<6}{'WT':<6}")
+    for job in jobs:
+        print(f"P{job.pid:<4}{job.bt:<6}{job.at:<6}{job.ft:<6}{job.tat:<6}{job.wt:<6}")
+    print_gantt_chart(gantt_chart)
+    plot_gantt_chart(gantt_chart)
+
+# Main code to take user input
+if __name__ == "__main__":
+    num_processes = int(input("Enter the number of processes: "))
+    processes = []
+    for i in range(num_processes):
+        print(f"\nProcess {i + 1}:")
+        pid = int(input("Enter Process ID: "))
+        bt = int(input("Enter Burst Time: "))
+        at = int(input("Enter Arrival Time: "))
+        processes.append(Process(pid=pid, bt=bt, at=at))
+
+    # Perform SJF Non-Preemptive Scheduling
+    gantt_chart_sjf_np = SJF_Non_Preemptive(processes)
+    display_sjf_np_results(processes, gantt_chart_sjf_np)
+
+
+  c. Shortest Job First (Preemptive)
+import matplotlib.pyplot as plt
+
+# Process class to hold process attributes
+class Process:
+    def __init__(self, pid, bt, at, rt=None, prio=None):
+        self.pid = pid  # Process ID
+        self.bt = bt    # Burst Time
+        self.at = at    # Arrival Time
+        self.rt = rt if rt else bt  # Remaining Time (for preemptive)
+        self.ft = None  # Finish Time
+        self.tat = None  # Turnaround Time
+        self.wt = None   # Waiting Time
+        self.prio = prio  # Priority (for priority scheduling)
+
+# Shortest Job First (Preemptive)
+def SJF_Preemptive(processes):
+    processes.sort(key=lambda x: x.at)
+    current_time = 0
+    gantt_chart = []
+    ready_queue = []
+    completed_processes = []
+    while len(completed_processes) < len(processes):
+        for p in processes:
+            if p.at <= current_time and p not in ready_queue and p not in completed_processes:
+                ready_queue.append(p)
+        if ready_queue:
+            ready_queue.sort(key=lambda x: x.rt)  # Sort by remaining time (preemption)
+            p = ready_queue.pop(0)
+            gantt_chart.append((p.pid, current_time, current_time + 1))  # 1 unit of time
+            current_time += 1
+            p.rt -= 1  # Decrease remaining time by 1
+            if p.rt == 0:
+                p.ft = current_time
+                p.tat = p.ft - p.at
+                p.wt = p.tat - p.bt
+                completed_processes.append(p)
+        else:
+            current_time += 1
+    return gantt_chart
+
+# Function to print the Gantt Chart (text-based)
+def print_gantt_chart(gantt_chart):
+    print("Gantt Chart:")
+    for entry in gantt_chart:
+        print(f"| P{entry[0]} ", end="")
+    print("|")
+    for entry in gantt_chart:
+        print(f"{entry[1]:<5}", end="")
+    print(gantt_chart[-1][2])
+
+# Function to plot the Gantt Chart using Matplotlib
+def plot_gantt_chart(gantt_chart):
+    fig, gnt = plt.subplots()
+    gnt.set_ylim(0, 50)
+    gnt.set_xlim(0, max([end for _, _, end in gantt_chart]))
+    gnt.set_xlabel('Time')
+    gnt.set_ylabel('Processes')
+    yticks = [15 * i + 10 for i in range(len(gantt_chart))]
+    gnt.set_yticks(yticks)
+    gnt.set_yticklabels([f'P{entry[0]}' for entry in gantt_chart])
+    for i, (pid, start_time, end_time) in enumerate(gantt_chart):
+        gnt.broken_barh([(start_time, end_time - start_time)], (yticks[i] - 5, 10), facecolors=('tab:blue'))
+    plt.show()
+
+# Function to print the results with proper column alignment
+def display_sjf_p_results(jobs, gantt_chart):
+    print("\nShortest Job First (Preemptive):")
+    print(f"{'PID':<6}{'BT':<6}{'AT':<6}{'FT':<6}{'TAT':<6}{'WT':<6}")
+    for job in jobs:
+        print(f"P{job.pid:<4}{job.bt:<6}{job.at:<6}{job.ft:<6}{job.tat:<6}{job.wt:<6}")
+    print_gantt_chart(gantt_chart)
+    plot_gantt_chart(gantt_chart)
+
+# Main code to take user input
+if __name__ == "__main__":
+    num_processes = int(input("Enter the number of processes: "))
+    processes = []
+    for i in range(num_processes):
+        print(f"\nProcess {i + 1}:")
+        pid = int(input("Enter Process ID: "))
+        bt = int(input("Enter Burst Time: "))
+        at = int(input("Enter Arrival Time: "))
+        processes.append(Process(pid=pid, bt=bt, at=at))
+
+    # Perform SJF Preemptive Scheduling
+    gantt_chart_sjf_p = SJF_Preemptive(processes)
+    display_sjf_p_results(processes, gantt_chart_sjf_p)
+
+
+d. Rsound Robin     
+import matplotlib.pyplot as plt
+
+# Function to find the waiting time for all processes
+def findWaitingTime(processes, n, bt, wt, quantum, at):
+    rem_bt = [0] * n
+    t = 0  # Current time
+
+    # Copy the burst time into rem_bt[]
+    for i in range(n):
+        rem_bt[i] = bt[i]
+
+    gantt_chart = []  # Gantt chart to store (process, start_time, end_time)
+
+    # Keep traversing processes in round robin manner until all of them are not done
+    while True:
+        done = True
+
+        # Traverse all processes one by one repeatedly
+        for i in range(n):
+            if rem_bt[i] > 0 and at[i] <= t:
+                done = False  # There is a pending process
+
+                start_time = t
+                if rem_bt[i] > quantum:
+                    t += quantum
+                    rem_bt[i] -= quantum
+                else:
+                    t += rem_bt[i]
+                    wt[i] = t - bt[i] - at[i]
+                    rem_bt[i] = 0
+                end_time = t
+                gantt_chart.append((processes[i], start_time, end_time))
+
+        if done:
+            break
+
+    return gantt_chart
+
+# Function to calculate turn around time
+def findTurnAroundTime(processes, n, bt, wt, tat):
+    # Calculating turnaround time
+    for i in range(n):
+        tat[i] = bt[i] + wt[i]
+
+# Function to calculate average waiting and turn-around times
+def findavgTime(processes, n, bt, quantum, at):
+    wt = [0] * n
+    tat = [0] * n
+    ct = [0] * n
+
+    # Function to find waiting time of all processes
+    gantt_chart = findWaitingTime(processes, n, bt, wt, quantum, at)
+
+    # Function to find turn around time for all processes
+    findTurnAroundTime(processes, n, bt, wt, tat)
+
+    # Calculate completion time
+    for i in range(n):
+        ct[i] = tat[i] + at[i]
+
+    # Display processes along with all details
+    print("{:<12}{:<15}{:<15}{:<15}{:<20}{:<15}".format(
+        "Processes", "Arrival Time", "Burst Time", "Waiting Time", "Turn-Around Time", "Completion Time"))
+    total_wt = 0
+    total_tat = 0
+    for i in range(n):
+        total_wt += wt[i]
+        total_tat += tat[i]
+        print("{:<12}{:<15}{:<15}{:<15}{:<20}{:<15}".format(
+            processes[i], at[i], bt[i], wt[i], tat[i], ct[i]))
+
+    print("\nAverage waiting time = {:.5f}".format(total_wt / n))
+    print("Average turn around time = {:.5f}".format(total_tat / n))
+
+    # Return the Gantt chart for visualization
+    return gantt_chart
+
+# Function to print the Gantt Chart in text format
+def print_gantt_chart(gantt_chart):
+    print("Gantt Chart:")
+    for entry in gantt_chart:
+        print(f"| P{entry[0]} ", end="")
+    print("|")
+    for entry in gantt_chart:
+        print(f"{entry[1]:<5}", end=" ")
+    print(gantt_chart[-1][2])
+
+# Function to plot the Gantt Chart using Matplotlib
+def plot_gantt_chart(gantt_chart):
+    fig, gnt = plt.subplots()
+    gnt.set_ylim(0, 50)
+    gnt.set_xlim(0, max([end for _, _, end in gantt_chart]))
+    gnt.set_xlabel('Time')
+    gnt.set_ylabel('Processes')
+    yticks = [15 * i + 10 for i in range(len(gantt_chart))]
+    gnt.set_yticks(yticks)
+    gnt.set_yticklabels([f'P{entry[0]}' for entry in gantt_chart])
+    for i, (pid, start_time, end_time) in enumerate(gantt_chart):
+        gnt.broken_barh([(start_time, end_time - start_time)], (yticks[i] - 5, 10), facecolors=('tab:blue'))
+    plt.show()
+
+# Driver code to take user input
+if __name__ == "__main__":
+    # Take number of processes from user
+    n = int(input("Enter the number of processes: "))
+
+    proc = []  # Process IDs
+    bt = []    # Burst Times
+    at = []    # Arrival Times
+
+    for i in range(n):
+        print(f"\nEnter details for Process {i + 1}:")
+        proc.append(i + 1)  # Process IDs start from 1
+        at.append(int(input("Enter Arrival Time: ")))
+        bt.append(int(input("Enter Burst Time: ")))
+
+    quantum = int(input("\nEnter the Time Quantum: "))
+
+    # Call the function to calculate times and display results
+    gantt_chart = findavgTime(proc, n, bt, quantum, at)
+
+    # Print Gantt Chart in text format
+    print_gantt_chart(gantt_chart)
+
+    # Plot Gantt Chart using matplotlib
+    plot_gantt_chart(gantt_chart)
+
+            
+  e. Priority (Non-preemptive)  
+import matplotlib.pyplot as plt
+
+
+# Process class to hold process attributes
+class Process:
+    def __init__(self, pid, bt, at, prio, rt=None):
+        self.pid = pid  # Process ID
+        self.bt = bt  # Burst Time
+        self.at = at  # Arrival Time
+        self.prio = prio  # Priority
+        self.rt = rt if rt else bt  # Remaining Time (for preemptive)
+        self.ft = None  # Finish Time
+        self.tat = None  # Turnaround Time
+        self.wt = None  # Waiting Time
+
+
+# Priority Scheduling (Non-Preemptive)
+def Priority_NP(processes):
+    processes.sort(key=lambda x: (x.at, x.prio))  # Sort by Arrival Time and then Priority
+    current_time = 0
+    gantt_chart = []
+    ready_queue = []
+    completed_processes = []
+
+    while len(completed_processes) < len(processes):
+        for p in processes:
+            if p.at <= current_time and p not in ready_queue and p not in completed_processes:
+                ready_queue.append(p)
+        if ready_queue:
+            ready_queue.sort(key=lambda x: x.prio)  # Sort by priority (lower value means higher priority)
+            p = ready_queue.pop(0)  # Choose process with highest priority
+            gantt_chart.append((p.pid, current_time, current_time + p.bt))  # Process runs for its burst time
+            current_time += p.bt
+            p.ft = current_time
+            p.tat = p.ft - p.at
+            p.wt = p.tat - p.bt
+            completed_processes.append(p)
+        else:
+            current_time += 1
+    return gantt_chart
+
+
+# Function to print the Gantt Chart (text-based)
+def print_gantt_chart(gantt_chart):
+    print("\nGantt Chart:")
+    for entry in gantt_chart:
+        print(f"| P{entry[0]} ", end="")
+    print("|")
+    for entry in gantt_chart:
+        print(f"{entry[1]:<5}", end=" ")
+    print(gantt_chart[-1][2])
+
+
+# Function to plot the Gantt Chart using Matplotlib
+def plot_gantt_chart(gantt_chart):
+    fig, gnt = plt.subplots()
+    gnt.set_ylim(0, 50)
+    gnt.set_xlim(0, max([end for _, _, end in gantt_chart]))
+    gnt.set_xlabel('Time')
+    gnt.set_ylabel('Processes')
+    yticks = [15 * i + 10 for i in range(len(gantt_chart))]
+    gnt.set_yticks(yticks)
+    gnt.set_yticklabels([f'P{entry[0]}' for entry in gantt_chart])
+    for i, (pid, start_time, end_time) in enumerate(gantt_chart):
+        gnt.broken_barh([(start_time, end_time - start_time)], (yticks[i] - 5, 10), facecolors=('tab:blue'))
+    plt.show()
+
+
+# Function to print the results with proper column alignment
+def display_priority_np_results(jobs, gantt_chart):
+    print("\nPriority Scheduling (Non-Preemptive):")
+    print(f"{'PID':<6}{'BT':<6}{'AT':<6}{'PR':<6}{'FT':<6}{'TAT':<6}{'WT':<6}")
+    for job in jobs:
+        print(f"P{job.pid:<4}{job.bt:<6}{job.at:<6}{job.prio:<6}{job.ft:<6}{job.tat:<6}{job.wt:<6}")
+    print_gantt_chart(gantt_chart)
+    plot_gantt_chart(gantt_chart)
+
+
+# Driver code to take user input
+if __name__ == "__main__":
+    print("Priority Scheduling (Non-Preemptive)")
+    n = int(input("Enter the number of processes: "))
+
+    tasks_priority_np = []
+    for i in range(n):
+        print(f"\nEnter details for Process {i + 1}:")
+        pid = i + 1
+        bt = int(input("Enter Burst Time: "))
+        at = int(input("Enter Arrival Time: "))
+        prio = int(input("Enter Priority (lower number = higher priority): "))
+        tasks_priority_np.append(Process(pid=pid, bt=bt, at=at, prio=prio))
+
+    gantt_chart_priority_np = Priority_NP(tasks_priority_np)
+    display_priority_np_results(tasks_priority_np, gantt_chart_priority_np)
+
+             
+     f. Priority (Non-preemptive)
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+
+def plot_gantt_chart(processes, timeline):
+    fig, gnt = plt.subplots()
+
+    gnt.set_xlabel('Time')
+    gnt.set_ylabel('Processes')
+
+    unique_processes = sorted(set(p for p, _ in timeline))
+
+    gnt.set_yticks([10 * (i + 1) for i in range(len(unique_processes))])
+    gnt.set_yticklabels([f'P{pid}' for pid in unique_processes])
+
+    gnt.set_xlim(0, max(t for _, t in timeline) + 1)
+    gnt.set_ylim(0, 10 * (len(unique_processes) + 1))
+
+    colors = ['red', 'green', 'blue', 'orange', 'purple']
+    for pid, start in timeline:
+        gnt.broken_barh([(start, 1)], (10 * (pid) - 5, 9), facecolors=(colors[(pid - 1) % len(colors)]))
+
+    handles = [mpatches.Patch(color=colors[i % len(colors)], label=f'P{i + 1}') for i in range(len(unique_processes))]
+    plt.legend(handles=handles)
+
+    plt.title("Gantt Chart")
+    plt.show()
+
+def preemptive_priority(processes):
+    n = len(processes)
+    processes.sort(key=lambda x: (x[1], x[3]))
+
+    current_time = 0
+    finish_times = [0] * n
+    remaining_burst = [burst for _, _, burst, _ in processes]
+    timeline = []
+
+    while True:
+        idx = -1
+        highest_priority = float('inf')
+        for i, (pid, arrival, burst, priority) in enumerate(processes):
+            if arrival <= current_time and remaining_burst[i] > 0 and priority < highest_priority:
+                highest_priority = priority
+                idx = i
+
+        if idx == -1:
+            current_time += 1
+            continue
+
+        remaining_burst[idx] -= 1
+        timeline.append((processes[idx][0], current_time))
+
+        if remaining_burst[idx] == 0:
+            finish_times[idx] = current_time + 1
+
+        current_time += 1
+
+        if all(burst == 0 for burst in remaining_burst):
+            break
+
+    turnaround_times = [finish_times[i] - processes[i][1] for i in range(n)]
+    waiting_times = [turnaround_times[i] - processes[i][2] for i in range(n)]
+
+    print("\n{:<10}{:<10}{:<10}{:<10}{:<10}{:<15}{:<10}".format(
+        "Process", "Arrival", "Burst", "Priority", "Finish", "Turnaround", "Waiting"
+    ))
+
+    for i, (pid, arrival, burst, priority) in enumerate(processes):
+        print("{:<10}{:<10}{:<10}{:<10}{:<10}{:<15}{:<10}".format(
+            f"P{pid}", arrival, burst, priority, finish_times[i], turnaround_times[i], waiting_times[i]
+        ))
+
+    plot_gantt_chart(processes, timeline)
+
+# Input from user
+def get_user_input():
+    num_processes = int(input("Enter the number of processes: "))
+    processes = []
+    for i in range(num_processes):
+        print(f"\nProcess {i + 1}:")
+        pid = i + 1
+        arrival = int(input("Enter arrival time: "))
+        burst = int(input("Enter burst time: "))
+        priority = int(input("Enter priority (lower number = higher priority): "))
+        processes.append((pid, arrival, burst, priority))
+    return processes
+
+# Main
+if __name__ == "__main__":
+    processes = get_user_input()
+    preemptive_priority(processes)
+
+Assignment 7
+Simulate the following page replacement algorithms
+a.	FIFO                   b. LRU                      c. OPT
+
+#include <stdio.h>
+
+int in(int size, int *array, int value) {
+    for (int i = 0; i < size; i++) {
+        if (array[i] == value)
+            return 1; // Return 1 if the page is found
+    }
+    return 0; // Return 0 if the page is not found
+}
+
+int closestIndex(int size, int currentLocation, int *array, int value, int direction) {
+    if (direction == -1) { // For LRU
+        for (int i = currentLocation - 1; i >= 0; i--) {
+            if (array[i] == value)
+                return i;
+        }
+    } else { // For Optimal
+        for (int i = currentLocation + 1; i < size; i++) {
+            if (array[i] == value)
+                return i;
+        }
+    }
+    return (direction == -1) ? -1 : size; // Return -1 or size if not found
+}
+
+int extreme(int size, int *array, int type) {
+    int extreme = 0; // Default to first index
+    if (type == 1) { // max
+        for (int i = 1; i < size; i++) {
+            if (array[i] > array[extreme]) {
+                extreme = i; // Update to max index
+            }
+        }
+    } else { // min
+        for (int i = 1; i < size; i++) {
+            if (array[i] < array[extreme]) {
+                extreme = i; // Update to min index
+            }
+        }
+    }
+    return extreme;
+}
+
+void printArray(int size, int *array) {
+    for (int i = 0; i < size; i++) {
+        printf("%d ", array[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int n; // Number of page requests
+    printf("Enter number of page requests: ");
+    scanf("%d", &n);
+    int m; // Number of pages in memory
+    printf("Enter number of pages: ");
+    scanf("%d", &m);
+    int currPages[m]; // Array to hold current pages
+    int pageRequests[n]; // Array to hold page requests
+
+    printf("Enter the page requests separated by space: \n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &pageRequests[i]); // Read page requests
+    }
+
+    // FIFO
+    int faults = 0, hits = 0, index = 0; // Use index to track the next page to replace
+    for (int i = 0; i < m; i++) {
+        currPages[i] = -1; // Initialize memory to -1
+    }
+
+    printf("\nFIFO:\n");
+    for (int i = 0; i < n; i++) {
+        if (in(m, currPages, pageRequests[i])) {
+            hits++;
+            printf("Request: %d - Hit (Pages in memory: ", pageRequests[i]);
+        } else {
+            currPages[index] = pageRequests[i]; // Replace page
+            index = (index + 1) % m; // Move to the next index in circular fashion
+            faults++;
+            printf("Request: %d - Fault (Pages in memory: ", pageRequests[i]);
+        }
+        // Print current pages in memory
+        printArray(m, currPages);
+    }
+
+    printf("\tTotal Pages: %d\n", n);
+    printf("\tPage faults: %d\n", faults);
+    printf("\tPage Hits: %d\n", hits);
+    printf("\tHit Ratio: %.2f%%\n", (hits * 100.0) / n);
+    printf("\tMiss Ratio: %.2f%%\n", (faults * 100.0) / n);
+
+    // Optimal
+    faults = 0; hits = 0; index = 0; 
+    for (int i = 0; i < m; i++) {
+        currPages[i] = -1; // Initialize memory to -1
+    }
+    int nextIndex[m]; // Array to hold next usage indexes
+    int filledBlocks = 0; // Number of filled blocks
+
+    printf("\nOptimal:\n");
+    for (int i = 0; i < n; i++) {
+        if (in(filledBlocks, currPages, pageRequests[i])) {
+            hits++;
+            printf("Request: %d - Hit (Pages in memory: ", pageRequests[i]);
+        } else {
+            if (filledBlocks == m) {
+                for (int j = 0; j < m; j++) {
+                    nextIndex[j] = closestIndex(n, i, pageRequests, currPages[j], 1);
+                }
+                int farest = extreme(m, nextIndex, 1); // Get index of furthest page
+                currPages[farest] = pageRequests[i]; // Replace it
+            } else {
+                currPages[filledBlocks++] = pageRequests[i]; // Fill new page
+            }
+            faults++;
+            printf("Request: %d - Fault (Pages in memory: ", pageRequests[i]);
+        }
+        // Print current pages in memory
+        printArray(m, currPages);
+    }
+
+    printf("\tTotal Pages: %d\n", n);
+    printf("\tPage Faults: %d\n", faults);
+    printf("\tPage Hits: %d\n", hits);
+    printf("\tHit Ratio: %.2f%%\n", (hits * 100.0) / n);
+    printf("\tMiss Ratio: %.2f%%\n", (faults * 100.0) / n);
+    
+    // LRU
+    faults = 0; hits = 0; index = 0; 
+    for (int i = 0; i < m; i++) {
+        currPages[i] = -1; // Initialize memory to -1
+    }
+    int prevIndex[m]; // Array to hold previous usage indexes
+
+    printf("\nLRU:\n");
+    for (int i = 0; i < n; i++) {
+        if (in(m, currPages, pageRequests[i])) {
+            hits++;
+            printf("Request: %d - Hit (Pages in memory: ", pageRequests[i]);
+        } else {
+            if (filledBlocks == m) {
+                for (int j = 0; j < m; j++) {
+                    prevIndex[j] = closestIndex(n, i, pageRequests, currPages[j], -1);
+                }
+                int leastRecent = extreme(m, prevIndex, -1); // Get index of least recently used page
+                currPages[leastRecent] = pageRequests[i]; // Replace it
+            } else {
+                currPages[filledBlocks++] = pageRequests[i]; // Fill new page
+            }
+            faults++;
+            printf("Request: %d - Fault (Pages in memory: ", pageRequests[i]);
+        }
+        // Print current pages in memory
+        printArray(m, currPages);
+    }
+
+    printf("\tTotal Pages: %d\n", n);
+    printf("\tPage Faults: %d\n", faults);
+    printf("\tPage Hits: %d\n", hits);
+    printf("\tHit Ratio: %.2f%%\n", (hits * 100.0) / n);
+    printf("\tMiss Ratio: %.2f%%\n", (faults * 100.0) / n);
+    
+    printf("\n");
+    return 0;
+}
+
+
+Assignment 8
+Implement Banker’s Safety algorithm for Deadlock Avoidance
+
+# Banker's Safety Algorithm in Python
+
+# Function to check if the system is in a safe state
+def is_safe(processes, available, max_demand, allocated, need):
+    num_processes = len(processes)
+    num_resources = len(available)
+
+    # Mark all processes as not finished
+    finish = [False] * num_processes
+    safe_sequence = []
+
+    # Work is a copy of available resources
+    work = available[:]
+
+    while len(safe_sequence) < num_processes:
+        safe_found = False
+        for p in range(num_processes):
+            if not finish[p]:
+                # Check if process can be satisfied with available resources
+                if all(need[p][r] <= work[r] for r in range(num_resources)):
+                    # If yes, pretend to allocate resources to this process
+                    for r in range(num_resources):
+                        work[r] += allocated[p][r]
+                    safe_sequence.append(p)
+                    finish[p] = True
+                    safe_found = True
+                    break
+
+        if not safe_found:
+            # No safe sequence found
+            return False, []
+
+    return True, safe_sequence
+
+
+# Driver code
+if __name__ == "__main__":
+    # Number of processes
+    num_processes = int(input("Enter the number of processes: "))
+    
+    # Process IDs (e.g., P0, P1, P2...)
+    processes = [i for i in range(num_processes)]
+
+    # Number of resource types
+    num_resources = int(input("Enter the number of resource types: "))
+
+    # Available resources
+    available = list(map(int, input(f"Enter {num_resources} available resources (space-separated): ").split()))
+
+    # Maximum demand for each process
+    max_demand = []
+    for i in range(num_processes):
+        demand = list(map(int, input(f"Enter maximum demand for Process {i} (space-separated): ").split()))
+        max_demand.append(demand)
+
+    # Allocated resources for each process
+    allocated = []
+    for i in range(num_processes):
+        allocation = list(map(int, input(f"Enter allocated resources for Process {i} (space-separated): ").split()))
+        allocated.append(allocation)
+
+    # Calculate the need matrix: max_demand - allocated
+    need = []
+    for i in range(num_processes):
+        need.append([max_demand[i][j] - allocated[i][j] for j in range(len(available))])
+
+    # Print input details
+    print("\nProcesses:", processes)
+    print("Available Resources:", available)
+    print("Max Demand Matrix:", max_demand)
+    print("Allocated Resources Matrix:", allocated)
+    print("Need Matrix:", need)
+    print()
+
+    # Check system safety
+    safe, safe_sequence = is_safe(processes, available, max_demand, allocated, need)
+
+    if safe:
+        print("System is in a safe state.")
+        print("Safe sequence is:", safe_sequence)
+    else:
+        print("System is NOT in a safe state!")
+
+input:safe
+Enter the number of processes: 4
+Enter the number of resource types: 2
+Enter 2 available resources (space-separated): 3 3
+Enter maximum demand for Process 0 (space-separated): 7 5
+Enter maximum demand for Process 1 (space-separated): 3 2
+Enter maximum demand for Process 2 (space-separated): 9 0
+Enter maximum demand for Process 3 (space-separated): 2 2
+Enter allocated resources for Process 0 (space-separated): 2 1
+Enter allocated resources for Process 1 (space-separated): 2 1
+Enter allocated resources for Process 2 (space-separated): 3 2
+Enter allocated resources for Process 3 (space-separated): 2 1
+
+
+input:unsafeEnter the number of processes: 3
+Enter the number of resource types: 2
+Enter 2 available resources (space-separated): 3 3
+Enter maximum demand for Process 0 (space-separated): 7 5
+Enter maximum demand for Process 1 (space-separated): 3 2
+Enter maximum demand for Process 2 (space-separated): 9 0
+Enter allocated resources for Process 0 (space-separated): 0 1
+Enter allocated resources for Process 1 (space-separated): 2 0
+Enter allocated resources for Process 2 (space-separated): 3 0
